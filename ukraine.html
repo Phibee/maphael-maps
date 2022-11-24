@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+      <head>
+            <meta charset="utf-8" />
+            <title>Map with some custom plotted cities and areas</title>
+            <style type="text/css">
+                  body {
+                        color: #5d5d5d;
+                        font-family: Helvetica, Arial, sans-serif;
+                  }
+
+                  h1 {
+                        font-size: 30px;
+                        margin: auto;
+                        margin-top: 50px;
+                  }
+
+                  .container {
+                        max-width: 800px;
+                        margin: auto;
+                  }
+
+                  /* Specific mapael css class are below
+                 * 'mapael' class is added by plugin
+                */
+
+                  .mapael .map {
+                        position: relative;
+                  }
+
+                  .mapael .mapTooltip {
+                        position: absolute;
+                        background-color: #fff;
+                        moz-opacity: 0.7;
+                        opacity: 0.7;
+                        filter: alpha(opacity=70);
+                        border-radius: 10px;
+                        padding: 10px;
+                        z-index: 1000;
+                        max-width: 200px;
+                        display: none;
+                        color: #343434;
+                  }
+            </style>
+
+            <script
+                  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"
+                  charset="utf-8"
+            ></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/1.0.3/numeral.min.js"></script>
+            <script
+                  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"
+                  charset="utf-8"
+            ></script>
+            <script
+                  src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"
+                  charset="utf-8"
+            ></script>
+            <script
+                  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/jquery.mapael.min.js"
+                  charset="utf-8"
+            ></script>
+
+            <script src="./js/maps/ukraine.js" charset="utf-8"></script>
+            <script src="./js/data.js" charset="utf-8"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+            <script type="text/javascript">
+                  $(function () {
+                        $(".mapcontainer").mapael({
+                              map: {
+                                    name: "ukraine",
+
+                                    // Set default plots and areas style
+                                    defaultPlot: {
+                                          attrs: {
+                                                fill: "#004a9b",
+                                                opacity: 0.6,
+                                          },
+                                          attrsHover: {
+                                                opacity: 1,
+                                          },
+                                          text: {
+                                                attrs: {
+                                                      fill: "#505444",
+                                                },
+                                                attrsHover: {
+                                                      fill: "#000",
+                                                },
+                                          },
+                                    },
+                                    defaultArea: {
+                                          attrs: {
+                                                fill: "#7c7c7c",
+                                                stroke: "#ffffff",
+                                          },
+                                          attrsHover: {
+                                                fill: "red",
+                                          },
+                                          text: {
+                                                attrs: {
+                                                      fill: "#505444",
+                                                },
+                                                attrsHover: {
+                                                      fill: "#000",
+                                                },
+                                          },
+                                    },
+                              },
+                              legend: {
+                                    area: {
+                                          title: "Budget in Oblasts",
+                                          slices: [
+                                                {
+                                                      min: 10000,
+                                                      max: 29999,
+                                                      attrs: {
+                                                            fill: "#d6e7f7",
+                                                      },
+                                                      label: "Less than 30K",
+                                                },
+                                                {
+                                                      min: 30000,
+                                                      max: 100000,
+                                                      attrs: {
+                                                            fill: "#85b4e0",
+                                                      },
+                                                      label: "Between 30K and 100K",
+                                                },
+                                                {
+                                                      min: 100000,
+                                                      max: 499999,
+                                                      attrs: {
+                                                            fill: "#478bca",
+                                                      },
+                                                      label: "Between 100K and 500K",
+                                                },
+                                                {
+                                                      min: 500000,
+                                                      attrs: {
+                                                            fill: "#1c6cb5",
+                                                      },
+                                                      label: "> 500K",
+                                                },
+                                          ],
+                                    },
+                                    plot: {
+                                          title: "People targeted in oblast",
+                                          slices: [
+                                                {
+                                                      min: 7000000,
+                                                      attrs: {
+                                                            fill: "#d32f2f",
+                                                            "stroke-width": 1,
+                                                            stroke: "#ffffff",
+                                                      },
+                                                      attrsHover: {
+                                                            transform: "s1.2",
+                                                            "stroke-width": 1,
+                                                      },
+                                                      label: "> 7M",
+                                                      size: 50,
+                                                },
+                                                {
+                                                      min: 2000000,
+                                                      max: 6000000,
+                                                      attrs: {
+                                                            fill: "#d32f2f",
+                                                            "stroke-width": 1,
+                                                            stroke: "#ffffff",
+                                                      },
+                                                      attrsHover: {
+                                                            transform: "s1.2",
+                                                            "stroke-width": 1,
+                                                      },
+                                                      label: "Between 2M and 6M",
+                                                      size: 30,
+                                                },
+                                                {
+                                                      max: 2000000,
+                                                      attrs: {
+                                                            fill: "#d32f2f",
+                                                            "stroke-width": 1,
+                                                            stroke: "#ffffff",
+                                                      },
+                                                      attrsHover: {
+                                                            transform: "s1.2",
+                                                            "stroke-width": 1,
+                                                      },
+                                                      label: "less than 1M",
+                                                      size: 15,
+                                                },
+                                          ],
+                                    },
+                              },
+
+                              // Customize some areas of the map
+                              areas: mappedAreas,
+
+                              // Add some plots on the map
+                              plots: mappedPlots,
+                        });
+                  });
+
+                  console.log({ mappedPlots });
+            </script>
+      </head>
+
+      <body>
+            <div class="container">
+                  <h1>Ukraine Map</h1>
+
+                  <div class="mapcontainer">
+                        <div class="map">
+                              <span>Alternative content for the map</span>
+                        </div>
+                        <div class="areaLegend">
+                              <span>Alternative content for the legend</span>
+                        </div>
+                        <div class="plotLegend">
+                              <span>Alternative content for the legend</span>
+                        </div>
+                  </div>
+
+                  <p>
+                        <b
+                              >All example for jQuery Mapael are available
+                              <a href="https://www.vincentbroute.fr/mapael/"
+                                    >here</a
+                              >.</b
+                        >
+                  </p>
+            </div>
+      </body>
+</html>
