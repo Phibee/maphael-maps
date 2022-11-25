@@ -30,16 +30,30 @@
 
                   .mapael .mapTooltip {
                         position: absolute;
-                        background-color: #fff;
-                        moz-opacity: 0.7;
-                        opacity: 0.7;
-                        filter: alpha(opacity=70);
+                        background-color: rgba(0, 0, 0, 0.7);
                         border-radius: 10px;
                         padding: 10px;
                         z-index: 1000;
                         max-width: 200px;
                         display: none;
-                        color: #343434;
+                        color: #fff;
+                  }
+
+                  .plotLegend circle {
+                        opacity: 1 !important;
+                  }
+
+                  .plotLegend svg {
+                        width: 100%;
+                  }
+
+                  .flex {
+                        display: flex;
+                        flex-direction: row;
+                  }
+
+                  .flex > div {
+                        flex-grow: 1;
                   }
             </style>
 
@@ -47,7 +61,6 @@
                   src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"
                   charset="utf-8"
             ></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/1.0.3/numeral.min.js"></script>
             <script
                   src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"
                   charset="utf-8"
@@ -95,7 +108,7 @@
                                                 stroke: "#ffffff",
                                           },
                                           attrsHover: {
-                                                fill: "red",
+                                                fill: "#F7CE01",
                                           },
                                           text: {
                                                 attrs: {
@@ -109,7 +122,7 @@
                               },
                               legend: {
                                     area: {
-                                          title: "Budget in Oblasts",
+                                          title: "People targeted in oblast",
                                           slices: [
                                                 {
                                                       min: 10000,
@@ -145,7 +158,7 @@
                                           ],
                                     },
                                     plot: {
-                                          title: "People targeted in oblast",
+                                          title: "Budget in oblasts",
                                           slices: [
                                                 {
                                                       min: 7000000,
@@ -200,9 +213,73 @@
                               // Add some plots on the map
                               plots: mappedPlots,
                         });
-                  });
 
-                  console.log({ mappedPlots });
+                        /**
+                         * Override styles and positions for legend circle
+                         */
+                        const plotLegendCircles =
+                              document.querySelectorAll(".plotLegend circle");
+
+                        let parentWidth = 0;
+                        let parentBottom = 0;
+                        Array.from(plotLegendCircles).forEach(
+                              (element, index) => {
+                                    let width =
+                                          element.getBoundingClientRect().width;
+                                    let bottom =
+                                          element.getBoundingClientRect()
+                                                .bottom;
+
+                                    if (index === 0) {
+                                          parentWidth = width;
+                                          parentBottom = bottom;
+                                    }
+
+                                    if (index > 0) {
+                                          let space = (parentWidth - width) / 2;
+                                          let bottomY = parentBottom - bottom;
+
+                                          element.setAttribute(
+                                                "style",
+                                                `transform:translate(${space}px, ${bottomY}px)`
+                                          );
+                                    }
+                              }
+                        );
+
+                        const plotLegendTexts =
+                              document.querySelectorAll(".plotLegend text");
+
+                        let parentTextBottom = 0;
+                        let parentTextLeft = 0;
+                        Array.from(plotLegendTexts).forEach(
+                              (element, index) => {
+                                    let bottom =
+                                          element.getBoundingClientRect().top;
+                                    let left =
+                                          element.getBoundingClientRect().left;
+
+                                    if (index === 0) {
+                                          parentTextBottom = bottom;
+                                          parentTextLeft = left;
+                                    }
+
+                                    if (index > 0) {
+                                          let bottomY =
+                                                parentBottom -
+                                                bottom +
+                                                index * 14;
+
+                                          element.setAttribute(
+                                                "style",
+                                                `transform:translate(40px,${
+                                                      bottomY - 60
+                                                }px)`
+                                          );
+                                    }
+                              }
+                        );
+                  });
             </script>
       </head>
 
@@ -214,22 +291,21 @@
                         <div class="map">
                               <span>Alternative content for the map</span>
                         </div>
-                        <div class="areaLegend">
-                              <span>Alternative content for the legend</span>
-                        </div>
-                        <div class="plotLegend">
-                              <span>Alternative content for the legend</span>
+                        <div class="flex">
+                              <div class="plotLegend">
+                                    <span
+                                          >Alternative content for the
+                                          legend</span
+                                    >
+                              </div>
+                              <div class="areaLegend">
+                                    <span
+                                          >Alternative content for the
+                                          legend</span
+                                    >
+                              </div>
                         </div>
                   </div>
-
-                  <p>
-                        <b
-                              >All example for jQuery Mapael are available
-                              <a href="https://www.vincentbroute.fr/mapael/"
-                                    >here</a
-                              >.</b
-                        >
-                  </p>
             </div>
       </body>
 </html>

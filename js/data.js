@@ -8,6 +8,28 @@ function uuidv4() {
       );
 }
 
+function nFormatter(num, digits) {
+      const lookup = [
+            { value: 1, symbol: "" },
+            { value: 1e3, symbol: "k" },
+            { value: 1e6, symbol: "M" },
+            { value: 1e9, symbol: "G" },
+            { value: 1e12, symbol: "T" },
+            { value: 1e15, symbol: "P" },
+            { value: 1e18, symbol: "E" },
+      ];
+      const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+      var item = lookup
+            .slice()
+            .reverse()
+            .find(function (item) {
+                  return num >= item.value;
+            });
+      return item
+            ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol
+            : "0";
+}
+
 const areasFromDb = [
       {
             code: "UA-63",
@@ -339,12 +361,13 @@ const mappedPlots = plotsFromDb.reduce(function (r, e) {
             longitude: e.lon,
             value: e.value,
             tooltip: {
-                  content: `${e.title}<br />Population: ${numeral(e.value)
-                        .format("0.0a")
-                        .toUpperCase()}`,
+                  content: `${e.title}<br />Budget: ${nFormatter(
+                        e.value,
+                        1
+                  ).toUpperCase()}`,
             },
             text: {
-                  content: `${numeral(e.value).format("0.0a").toUpperCase()}`,
+                  content: `${nFormatter(e.value, 1).toUpperCase()}`,
                   position: "center",
                   attrs: {
                         "font-size": 11,
